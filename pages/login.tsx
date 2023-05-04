@@ -1,5 +1,7 @@
+import { addUserToStore } from '@/features/users/userSlice'
 import { auth } from '@/services/firebase'
 import { signInWithGoogle } from '@/services/googleSignIn'
+import { useAppDispatch } from '@/store'
 import { routeNames } from '@/utils/globalConstants'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import Link from 'next/link'
@@ -21,6 +23,7 @@ function login() {
   const [error, setError] = useState<string>('')
 
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const UpdateUserObject = (e: React.ChangeEvent<HTMLInputElement>) => {
     const copyLoginUser = {
@@ -38,6 +41,13 @@ function login() {
       console.log(userCredential.user)
       setError('')
       setLoginUser(defaultLoginUser)
+      dispatch(
+        addUserToStore({
+          firstName: 'hello',
+          lastName: '',
+          email: loginUser.email,
+        })
+      )
       router.push(routeNames.HOME)
     } catch (e: any) {
       // remove "Firebase : " from error message

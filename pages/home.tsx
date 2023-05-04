@@ -1,10 +1,14 @@
 import { auth } from '@/services/firebase'
+import { useAppSelector } from '@/store'
 import { routeNames } from '@/utils/globalConstants'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/router'
 
 function home() {
   const router = useRouter()
+
+  const user = useAppSelector(state => state.user)
+  console.log(user)
 
   const logout = async () => {
     try {
