@@ -1,24 +1,6 @@
-import { auth } from '@/services/firebase'
-import { routeNames } from '@/utils/globalConstants'
-import { onAuthStateChanged } from 'firebase/auth'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 export default function Home() {
-  const router = useRouter()
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        const uid = user.uid
-        router.push(routeNames.HOME)
-      } else {
-        router.push(routeNames.LOGIN)
-      }
-    })
-  }, [])
-
   return (
     <div>
       <Head>
