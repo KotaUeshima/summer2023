@@ -1,9 +1,11 @@
 import { addUserToStore } from '@/features/users/userSlice'
-import { auth } from '@/services/firebase'
+import { auth, database } from '@/services/firebase'
 import { signInWithGoogle } from '@/services/googleSignIn'
 import { useAppDispatch } from '@/store'
 import { routeNames } from '@/utils/globalConstants'
+import { UserInterface } from '@/utils/globalInterfaces'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -38,16 +40,29 @@ function login() {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginUser.email, loginUser.password)
-      console.log(userCredential.user)
+      const user = userCredential.user
+      const userId = user.uid
+      const docRef = doc(database, 'users', userId)
+      const docSnap = await getDoc(docRef)
+      let firstName: string
+      let lastName: string
+      let email: string
+      if (docSnap.exists()) {
+        firstName = docSnap.data()['firstName']
+        lastName = docSnap.data()['lastName']
+        email = docSnap.data()['email']
+      } else {
+        throw new Error('Could not get doc from firestore')
+      }
+      const userObj: UserInterface = {
+        userId: userId,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      }
+      dispatch(addUserToStore(userObj))
       setError('')
       setLoginUser(defaultLoginUser)
-      dispatch(
-        addUserToStore({
-          firstName: 'hello',
-          lastName: '',
-          email: loginUser.email,
-        })
-      )
       router.push(routeNames.HOME)
     } catch (e: any) {
       // remove "Firebase : " from error message

@@ -1,12 +1,8 @@
+import { UserInterface } from '@/utils/globalInterfaces'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-export interface User {
-  firstName: string
-  lastName: string
-  email: string
-}
-
-const initialState: User = {
+const initialState: UserInterface = {
+  userId: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -16,7 +12,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    addUserToStore: (state, action: PayloadAction<User>) => {
+    addUserToStore: (state, action: PayloadAction<UserInterface>) => {
+      state.userId = action.payload.userId
       state.firstName = action.payload.firstName
       state.lastName = action.payload.lastName
       state.email = action.payload.email

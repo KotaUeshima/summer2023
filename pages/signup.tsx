@@ -1,9 +1,11 @@
+import { addUserToStore } from '@/features/users/userSlice'
 import languageGraphic from '@/public/assets/languageGraphic.png'
 import { auth, database } from '@/services/firebase'
+import { useAppDispatch } from '@/store'
 import { routeNames } from '@/utils/globalConstants'
-import { UserForFirebase } from '@/utils/globalInterfaces'
+import { UserInterface } from '@/utils/globalInterfaces'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { addDoc, collection } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -28,6 +30,7 @@ function signup() {
   const [error, setError] = useState<string>('')
 
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const UpdateUserObject = (e: React.ChangeEvent<HTMLInputElement>) => {
     const copySignUpUser = {
@@ -44,13 +47,14 @@ function signup() {
       const userCredential = await createUserWithEmailAndPassword(auth, signUpUser.email, signUpUser.password)
       const user = userCredential.user
       const userId = user.uid
-      const userObj: UserForFirebase = {
+      const userObj: UserInterface = {
         userId: userId,
         firstName: signUpUser.firstName,
         lastName: signUpUser.lastName,
         email: signUpUser.email,
       }
-      const docRef = await addDoc(collection(database, 'users'), userObj)
+      const docRef = await setDoc(doc(database, 'users', userId), userObj)
+      dispatch(addUserToStore(userObj))
       setError('')
       setSignUpUser(defaultSignUpUser)
       router.push(routeNames.HOME)

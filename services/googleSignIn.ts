@@ -1,9 +1,11 @@
-import { auth } from '@/services/firebase'
+import { addUserToStore } from '@/features/users/userSlice'
+import { auth, database } from '@/services/firebase'
 import { useAppDispatch } from '@/store'
+import { UserInterface } from '@/utils/globalInterfaces'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
 
 const provider = new GoogleAuthProvider()
-const dispatch = useAppDispatch
 
 export const signInWithGoogle = async () => {
   signInWithPopup(auth, provider)
@@ -13,33 +15,28 @@ export const signInWithGoogle = async () => {
         // The signed-in user info.
         const user = result.user
         const userId: string = user.uid
-        const fullName: string | null = user.displayName
-        let firstName: string
-        let lastName: string
-        if (fullName) {
-          firstName = fullName?.split('')[0]
-          lastName = fullName?.split('')[1]
-        } else {
-          firstName = 'Bob'
-          lastName = 'Dylan'
+        const fullName: string = user.displayName || ''
+        const email: string = user.email || ''
+        let firstName: string = ''
+        let lastName: string = ''
+        if (fullName !== '') {
+          firstName = fullName.split(' ')[0]
+          lastName = fullName.split(' ')[1]
         }
-        const email: string | null = user.email
-        // new user
+        const userObj: UserInterface = {
+          userId: userId,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        }
+        // new user, add user to firestore
+        // is not the most accurate method all the time
         if (user.metadata.creationTime == user.metadata.lastSignInTime) {
-          // const userObj: UserForFirebase{
-          //   userId: userId,
-          //   fullName: ,
-          //   email: email || "no email",
-          // }
+          const docRef = setDoc(doc(database, 'users', userId), userObj)
         }
-        // returning user
-        else {
-        }
-        // dispatch(addUserToStore({
-        //   firstName: 'hello',
-        //   lastName: '',
-        //   email: '',
-        // }))
+        // dispatch to redux store
+        const dispatch = useAppDispatch()
+        dispatch(addUserToStore(userObj))
       }
     })
     .catch(error => {
@@ -48,9 +45,8 @@ export const signInWithGoogle = async () => {
       const errorMessage = error.message
       console.log(errorMessage)
       // The email of the user's account used.
-      const email = error.customData.email
+      // const email = error.customData.email
       // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error)
-      // ...
+      // const credential = GoogleAuthProvider.credentialFromError(error)
     })
 }
