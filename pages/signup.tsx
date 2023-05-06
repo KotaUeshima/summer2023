@@ -92,8 +92,8 @@ function signup() {
               Password
             </label>
             <input type='password' name='password' className='loginFormInput' value={signUpUser.password} onChange={UpdateUserObject} />
-            <div className='mt-2 h-4 flow-root'>
-              <p className='float-left text-sm text-errorRed'>{error}</p>
+            <div className='mt-2 h-10 lg:h-4 flex flex-col lg:flow-root'>
+              <p className='h-4 float-left text-sm text-errorRed'>{error}</p>
               <a className='float-right text-sm text-primary/80 font-bold cursor-pointer'>Forgot Password?</a>
             </div>
             <button className='mt-4 rounded-md p-3 text-white bg-primary/20 hover:bg-primary ease-in-out duration-500'>Create account</button>

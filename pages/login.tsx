@@ -87,8 +87,8 @@ function login() {
               Password
             </label>
             <input type='password' name='password' className='loginFormInput' value={loginUser.password} onChange={UpdateUserObject} />
-            <div className='mt-2 h-4 flow-root'>
-              <p className='float-left text-sm text-errorRed'>{error}</p>
+            <div className='mt-2 h-10 lg:h-4 flex flex-col lg:flow-root'>
+              <p className='h-5 float-left text-sm text-errorRed'>{error}</p>
               <a className='float-right text-sm text-primary/80 font-bold cursor-pointer'>Forgot Password?</a>
             </div>
             <button className='mt-4 rounded-md p-3 text-white bg-primary/20 hover:bg-primary ease-in-out duration-500'>Login</button>
@@ -103,7 +103,17 @@ function login() {
           <button
             type='button'
             className='text-white bg-red-400 font-medium rounded-md text-sm p-3 text-center inline-flex items-center justify-between'
-            onClick={signInWithGoogle}
+            onClick={async () => {
+              try {
+                const userObj: UserInterface | undefined = await signInWithGoogle()
+                if (userObj === undefined) {
+                  throw Error('user object is undefined')
+                }
+                dispatch(addUserToStore(userObj))
+              } catch (e: any) {
+                setError(e)
+              }
+            }}
           >
             <svg
               className='mr-2 ml-4 w-4 h-6'

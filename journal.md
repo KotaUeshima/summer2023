@@ -4,8 +4,9 @@ to see preview, CMD + K, then press V
 
 ## Things to work on
 
-- figure out where to put dispatch for google login
-- UI bug for forgot password on smaller screens
+- Stuck on how the project should be
+- Goal for now: Help Japan improve English
+- Think of providing a service, not just a platform for users
 
 ### Friday May 5th
 
@@ -20,3 +21,7 @@ Looking forward:
 - May want to see how I can implement UI testing
 - Actually thinking about main part of the application, and building out UI for that
 - Come up with some sort of plan of what you want to make for the platform
+
+### Satruday May 6th
+
+- A little bit lost on where this project should go

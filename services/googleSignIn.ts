@@ -1,14 +1,12 @@
-import { addUserToStore } from '@/features/users/userSlice'
 import { auth, database } from '@/services/firebase'
-import { useAppDispatch } from '@/store'
 import { UserInterface } from '@/utils/globalInterfaces'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
 
 const provider = new GoogleAuthProvider()
 
-export const signInWithGoogle = async () => {
-  signInWithPopup(auth, provider)
+export const signInWithGoogle: () => Promise<UserInterface | undefined> = async () => {
+  const userObj = await signInWithPopup(auth, provider)
     .then(result => {
       const credential = GoogleAuthProvider.credentialFromResult(result)
       if (credential != null) {
@@ -35,18 +33,17 @@ export const signInWithGoogle = async () => {
           const docRef = setDoc(doc(database, 'users', userId), userObj)
         }
         // dispatch to redux store
-        const dispatch = useAppDispatch()
-        dispatch(addUserToStore(userObj))
+        return userObj
       }
     })
     .catch(error => {
       // Handle Errors here.
-      const errorCode = error.code
       const errorMessage = error.message
-      console.log(errorMessage)
       // The email of the user's account used.
       // const email = error.customData.email
       // The AuthCredential type that was used.
       // const credential = GoogleAuthProvider.credentialFromError(error)
+      throw Error(errorMessage)
     })
+  return userObj
 }
