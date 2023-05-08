@@ -1,3 +1,4 @@
+import Layout from '@/layouts/Layout'
 import { auth } from '@/services/firebase'
 import store from '@/store'
 import '@/styles/globals.css'
@@ -23,7 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </Provider>
   )
 }

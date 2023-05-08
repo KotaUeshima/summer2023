@@ -74,7 +74,7 @@ function login() {
   return (
     <div className='min-h-screen w-screen flex flex-row justify-center items-center bg-gray-50'>
       {/* Hovering White */}
-      <div className='w-[40%] bg-white rounded-md flex pt-14 pb-10 drop-shadow-2xl justify-center items-center'>
+      <div className='w-[40%] bg-white rounded-lg flex pt-14 pb-10 drop-shadow-2xl justify-center items-center'>
         {/* Form + Header + SignInButton */}
         <div className='flex flex-col space-y-8 w-2/3'>
           <h2 className='loginHeader'>Welcome Back!</h2>

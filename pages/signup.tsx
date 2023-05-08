@@ -72,7 +72,7 @@ function signup() {
         <Image src={languageGraphic} alt='language graphic' />
       </div>
       {/* Form + Header + SignInButton */}
-      <div className='w-[40%] bg-white rounded-md flex pt-14 pb-10 drop-shadow-2xl justify-center items-center'>
+      <div className='w-[40%] bg-white rounded-lg flex pt-14 pb-10 drop-shadow-2xl justify-center items-center'>
         <div className='flex flex-col space-y-8 w-2/3'>
           <h2 className='loginHeader'>Create your account</h2>
           <form className='flex flex-col' onSubmit={handleSignUp}>
